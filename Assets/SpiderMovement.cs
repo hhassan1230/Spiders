@@ -4,13 +4,25 @@ using System.Collections;
 public class SpiderMovement : MonoBehaviour {
 	public static SpiderMovement instance;
 
+	private Quaternion currentRotation;
+	private Quaternion nextRotation;
+
+
 	private Vector3 currentPosition;
 	private Vector3 nextPosition;
 	private float moveU;
+	private float slideU;
+
 	private float moveElapsed;
+	private float slideElapsed;
+
 	private bool isSpiderMoving;
+	private bool isSpiderTurning;
 
 	public float duration = 1.5f;
+
+	public float spinDuration = .5f;
+
 	void Awake(){
 		if (instance == null) {
 			instance = this;
@@ -19,6 +31,9 @@ public class SpiderMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		isSpiderMoving = false;
+		isSpiderTurning = false;
+		currentRotation = transform.rotation;
+
 	}
 	
 	// Update is called once per frame
@@ -26,6 +41,21 @@ public class SpiderMovement : MonoBehaviour {
 	public void UpdateNextPosition(Vector3 position){
 		nextPosition = position;
 		isSpiderMoving = true;
+	}
+
+	public void UpdateNextRotation(Quaternion position){
+		nextRotation = position;
+
+		isSpiderTurning = true;
+	}
+
+	public void crawlDown(){
+		// Move to set position under chair
+
+		// wait with corutine 
+
+		// crawl down
+		
 	}
 
 	void Update () {
@@ -37,6 +67,18 @@ public class SpiderMovement : MonoBehaviour {
 				isSpiderMoving = false;
 				moveElapsed = 0;
 				currentPosition = transform.position;
+			}  
+		}
+
+		if  (isSpiderTurning) {
+			slideElapsed += Time.deltaTime;
+			slideU = slideElapsed / spinDuration;
+			gameObject.transform.rotation = Quaternion.Slerp(currentRotation, nextRotation, slideU);
+
+			if (slideElapsed >= spinDuration){
+				isSpiderTurning = false;
+				slideElapsed = 0;
+				currentRotation = transform.rotation;
 			}  
 		}
 	}
