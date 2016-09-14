@@ -6,6 +6,7 @@ public class SpiderMovement : MonoBehaviour {
 
 	private Quaternion currentRotation;
 	private Quaternion nextRotation;
+	private Animation spiderAnim;
 
 
 	private Vector3 currentPosition;
@@ -33,6 +34,7 @@ public class SpiderMovement : MonoBehaviour {
 		isSpiderMoving = false;
 		isSpiderTurning = false;
 		currentRotation = transform.rotation;
+		spiderAnim = GameObject.FindGameObjectWithTag ("spider").GetComponent<Animation> (); //.Play();
 
 	}
 	
@@ -41,6 +43,8 @@ public class SpiderMovement : MonoBehaviour {
 	public void UpdateNextPosition(Vector3 position){
 		nextPosition = position;
 		isSpiderMoving = true;
+		spiderAnim.Play ("walk");
+		spiderAnim["walk"].speed= 7.5f;
 	}
 
 	public void UpdateNextRotation(Quaternion position){
@@ -65,6 +69,8 @@ public class SpiderMovement : MonoBehaviour {
 			gameObject.transform.position = Vector3.Lerp(currentPosition, nextPosition, moveU);
 			if (moveElapsed >= duration){
 				isSpiderMoving = false;
+				spiderAnim.Play ("shake1");
+
 				moveElapsed = 0;
 				currentPosition = transform.position;
 			}  
@@ -77,6 +83,8 @@ public class SpiderMovement : MonoBehaviour {
 
 			if (slideElapsed >= spinDuration){
 				isSpiderTurning = false;
+				spiderAnim.Play ("shake1");
+
 				slideElapsed = 0;
 				currentRotation = transform.rotation;
 			}  

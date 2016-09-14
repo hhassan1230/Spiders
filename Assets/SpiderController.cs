@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class SpiderController : MonoBehaviour {
 	private SpiderMovement spiderScript;
 	private GameObject spider;
+	private Animation spiderAnim;
 	public List<GameObject>  positionArray;
 
 	private Vector3 originPoint;
@@ -17,6 +18,7 @@ public class SpiderController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		spider = GameObject.FindGameObjectWithTag ("SpiderContainer");
+		spiderAnim = GameObject.FindGameObjectWithTag ("spider").GetComponent<Animation> (); //.Play();
 		spiderScript = spider.GetComponent<SpiderMovement> ();
 		arrayLength = positionArray.Count;
 		count = 0;
@@ -45,6 +47,7 @@ public class SpiderController : MonoBehaviour {
 			spider.transform.rotation = Quaternion.LookRotation(spider.transform.position - positionArray [count].transform.position);
 
 			spiderScript.UpdateNextPosition (currentPosition);
+
 			count++;	
 		} else {
 //			count = 0;
@@ -54,7 +57,8 @@ public class SpiderController : MonoBehaviour {
 //			spiderScript.UpdateNextPosition (currentPosition);
 //			count++;
 			if (isCrawling) {
-				spider.transform.rotation = Quaternion.LookRotation(spider.transform.position - originPoint);
+//				spider.transform.rotation = Quaternion.LookRotation(spider.transform.position - originPoint);
+				spiderScript.UpdateNextRotation(Quaternion.LookRotation(spider.transform.position - originPoint));
 				spiderScript.UpdateNextPosition (originPoint);
 //				RotationDriveMode x
 				StartCoroutine("CrawlDown");
